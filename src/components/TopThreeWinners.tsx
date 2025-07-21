@@ -22,7 +22,7 @@ const TopThreeWinners: React.FC<TopThreeWinnersProps> = ({ winners }) => {
       case 2:
         return <Award className="w-7 h-7 text-gray-400 drop-shadow-lg" />;
       case 3:
-        return <Star className="w-6 h-6 text-amber-600 drop-shadow-lg" />;
+        return <Star className="w-6 h-6 text-amber-800 drop-shadow-lg" />;
       default:
         return null;
     }
@@ -36,7 +36,7 @@ const TopThreeWinners: React.FC<TopThreeWinnersProps> = ({ winners }) => {
       case 2:
         return `${baseClasses} bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 border-4 border-gray-500`;
       case 3:
-        return `${baseClasses} bg-gradient-to-br from-amber-200 via-amber-300 to-amber-400 border-4 border-amber-500`;
+        return `${baseClasses} bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 border-4 border-amber-700`;
       default:
         return `${baseClasses} bg-white`;
     }
