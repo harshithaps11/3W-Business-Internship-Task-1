@@ -11,6 +11,7 @@ export const userAPI = {
   getAllUsers: () => api.get('/users'),
   addUser: (userData) => api.post('/users', userData),
   claimPoints: (userId) => api.post('/users/claim', { userId }),
+  deleteUser: (userId) => api.delete(`/users/${userId}`),
 };
 
 export const leaderboardAPI = {

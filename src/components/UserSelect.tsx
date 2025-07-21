@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { User, Plus, UserPlus } from 'lucide-react';
+import { User, Plus, UserPlus, Trash2 } from 'lucide-react';
 import { userAPI } from '../services/api';
 
 interface UserSelectProps {
   selectedUser: any;
   onUserSelect: (user: any) => void;
   onUserAdded: () => void;
+  onUserDeleted: () => void;
 }
 
-const UserSelect: React.FC<UserSelectProps> = ({ selectedUser, onUserSelect, onUserAdded }) => {
+const UserSelect: React.FC<UserSelectProps> = ({ selectedUser, onUserSelect, onUserAdded, onUserDeleted }) => {
   const [users, setUsers] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -46,6 +47,19 @@ const UserSelect: React.FC<UserSelectProps> = ({ selectedUser, onUserSelect, onU
       alert(error.response?.data?.error || 'Error adding user');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      try {
+        await userAPI.deleteUser(userId);
+        setUsers(users.filter((user: any) => user._id !== userId));
+        onUserDeleted();
+        alert('User deleted successfully!');
+      } catch (error: any) {
+        alert(error.response?.data?.error || 'Error deleting user');
+      }
     }
   };
 
@@ -133,22 +147,26 @@ const UserSelect: React.FC<UserSelectProps> = ({ selectedUser, onUserSelect, onU
             
             <div className="border-t border-purple-200 mt-2 pt-2">
               {filteredUsers.map((user: any) => (
-                <button
-                  key={user._id}
-                  onClick={() => {
-                    onUserSelect(user);
-                    setIsOpen(false);
-                  }}
-                  className="w-full flex items-center space-x-3 px-3 py-2 hover:bg-purple-50 rounded-lg transition-colors duration-200"
-                >
-                  <img
-                    src={user.avatarUrl}
-                    alt={user.name}
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                  <span className="text-gray-800 font-medium">{user.name}</span>
-                  <span className="text-sm text-gray-500 ml-auto">{user.totalPoints} pts</span>
-                </button>
+                <div key={user._id} className="flex items-center space-x-3 px-3 py-2 hover:bg-purple-50 rounded-lg transition-colors duration-200">
+                  <button
+                    onClick={() => {
+                      onUserSelect(user);
+                      setIsOpen(false);
+                    }}
+                    className="flex-grow flex items-center space-x-3 text-left"
+                  >
+                    <img
+                      src={user.avatarUrl}
+                      alt={user.name}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <span className="text-gray-800 font-medium">{user.name}</span>
+                    <span className="text-sm text-gray-500 ml-auto">{user.totalPoints} pts</span>
+                  </button>
+                  <button onClick={() => handleDeleteUser(user._id)} className="p-1 text-red-500 hover:text-red-700">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               ))}
               {filteredUsers.length === 0 && (
                 <div className="text-center text-gray-400 py-2">No users found.</div>

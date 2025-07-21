@@ -53,6 +53,12 @@ function App() {
     fetchLeaderboard();
   };
 
+  const handleUserDeleted = () => {
+    fetchLeaderboard();
+    setHistoryRefreshKey((k) => k + 1);
+    setSelectedUser(null); // Clear selected user
+  };
+
   const topThree = leaderboard.filter((user: any) => user.rank <= 3);
   const remainingUsers = leaderboard.filter((user: any) => user.rank > 3);
 
@@ -94,6 +100,7 @@ function App() {
             selectedUser={selectedUser}
             onUserSelect={handleUserSelect}
             onUserAdded={handleUserAdded}
+            onUserDeleted={handleUserDeleted}
           />
           <ClaimButton
             selectedUser={selectedUser}

@@ -91,8 +91,29 @@ const claimPoints = async (req, res) => {
   }
 };
 
+// Delete user
+const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find and delete the user
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Delete all associated claim history
+    await History.deleteMany({ userId });
+
+    res.json({ message: 'User and their history deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export {
   getAllUsers,
   addUser,
-  claimPoints
+  claimPoints,
+  deleteUser,
 };
